@@ -10,7 +10,9 @@ export const CollectedRewardsView = () => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>Collected Rewards: {collectedRewards.length}</Text>
+      <Text style={styles.text} allowFontScaling={false}>
+        Collected Rewards: {collectedRewards.length}
+      </Text>
     </View>
   );
 };

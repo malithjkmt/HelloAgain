@@ -31,8 +31,16 @@ export const RewardCard: FC<RewardCardProps> = ({ id, name, image, neededPoints,
       )}
 
       <View style={styles.centerColumn}>
-        <Text style={styles.nameText}>{name}</Text>
-        <Text style={styles.pointsText}>{neededPoints} Points</Text>
+        <Text
+          style={styles.nameText}
+          allowFontScaling={false}
+          numberOfLines={2}
+          ellipsizeMode="tail">
+          {name}
+        </Text>
+        <Text style={styles.pointsText} allowFontScaling={false}>
+          {neededPoints} Points
+        </Text>
       </View>
       <TouchableOpacity style={styles.actionContainer} disabled={isCollected} onPress={onCollect}>
         {!isCollected && (
