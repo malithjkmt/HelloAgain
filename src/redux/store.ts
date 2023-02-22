@@ -12,16 +12,11 @@ const assembleMiddleware = () => {
   middleware.push(thunkMiddleware);
 
   if (__DEV__) {
-    /* ------------- Redux Logger Middleware ------------- */
+    /* ------------- Logger Middleware ------------- */
     // Note: logger must be the last middleware in chain,
     // otherwise it will log thunk and promise, not actual actions.
-    const { createLogger } = require('redux-logger');
-
-    const logger = createLogger({
-      collapsed: true,
-      duration: true,
-      diff: true,
-    });
+    const createDebugger = require('redux-flipper').default;
+    const logger = createDebugger();
 
     middleware.push(logger);
   } else {
