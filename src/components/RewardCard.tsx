@@ -4,23 +4,19 @@ import { View, StyleSheet, Text, TouchableOpacity, Image } from 'react-native';
 import { theme } from '../styles/theme';
 import { Reward } from '../types/appTypes';
 import { Icons, PlaceHolders } from '../assets/images';
+import { useAppSelector } from '../redux/hooks';
+import { isRewardCollected } from '../redux/rewards/rewards.slice';
 
 interface RewardCardProps extends Reward {
-  isCollected: boolean;
   onCollect: () => void;
 }
 
 export const CARD_HEIGHT = 90;
 export const CARD_MARGIN = 2;
 
-export const RewardCard: FC<RewardCardProps> = ({
-  id,
-  name,
-  image,
-  neededPoints,
-  isCollected,
-  onCollect,
-}) => {
+export const RewardCard: FC<RewardCardProps> = ({ id, name, image, neededPoints, onCollect }) => {
+  const isCollected = useAppSelector(isRewardCollected(id));
+
   return (
     <View style={styles.card} key={id}>
       {image ? (

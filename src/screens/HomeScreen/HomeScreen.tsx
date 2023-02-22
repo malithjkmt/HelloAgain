@@ -5,11 +5,7 @@ import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 import { fetchRewards } from '../../redux/rewards/rewards.slice';
 import { Reward } from '../../types/appTypes';
 import { CLIENT_ID } from '../../utils/constants';
-import {
-  selectAvailableRewards,
-  selectCollectedRewardsMap,
-  collectReward,
-} from '../../redux/rewards/rewards.slice';
+import { selectAvailableRewards, collectReward } from '../../redux/rewards/rewards.slice';
 import { ListEmptyComp, RewardCard, CARD_HEIGHT, CARD_MARGIN } from '../../components';
 import { CollectedRewardsView } from '../../views';
 import { commonStyles } from '../../styles/commonStyles';
@@ -18,7 +14,6 @@ import { theme } from '../../styles/theme';
 const HomeScreen = () => {
   const dispatch = useAppDispatch();
   const availableRewards = useAppSelector(selectAvailableRewards);
-  const collectedRewardsMap = useAppSelector(selectCollectedRewardsMap);
 
   const [isFetching, setIsFetching] = useState(false);
   const [fetchingError, setFetchingError] = useState<null | string>(null);
@@ -46,11 +41,7 @@ const HomeScreen = () => {
   };
 
   const renderRewardCard = ({ item }: { item: Reward }) => (
-    <RewardCard
-      {...item}
-      isCollected={collectedRewardsMap[item.id] || false}
-      onCollect={() => onCollect(item)}
-    />
+    <RewardCard {...item} onCollect={() => onCollect(item)} />
   );
 
   return (
@@ -64,7 +55,7 @@ const HomeScreen = () => {
             contentContainerStyle={styles.listContainer}
             ListEmptyComponent={<ListEmptyComp message="No Loyalty rewards found" />}
             data={availableRewards}
-            keyExtractor={item => item.id.toString()}
+            keyExtractor={item => item.id}
             renderItem={renderRewardCard}
             progressViewOffset={200}
             refreshing={isFetching}

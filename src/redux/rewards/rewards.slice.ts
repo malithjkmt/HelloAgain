@@ -1,4 +1,4 @@
-import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
+import { createSlice, createAsyncThunk, PayloadAction, createSelector } from '@reduxjs/toolkit';
 import { Reward } from '../../types/appTypes';
 import HelloAgainAPI from '../../services/HelloAgainAPI';
 import { RootState } from '../store';
@@ -51,7 +51,10 @@ export const rewardsSlice = createSlice({
 
 export const selectAvailableRewards = (state: RootState) => state.rewards.availableRewards;
 export const selectCollectedRewards = (state: RootState) => state.rewards.collectedRewards;
-export const selectCollectedRewardsMap = (state: RootState) => state.rewards.collectedRewardsMap;
+
+export const isRewardCollected = (id: string) => (store: RootState) => {
+  return store.rewards.collectedRewardsMap[id] || false;
+};
 
 export const { collectReward } = rewardsSlice.actions;
 
