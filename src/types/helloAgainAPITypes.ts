@@ -16,4 +16,4 @@ export const rewardFromRewardDTO = ({ id, name, needed_points, image }: RewardDT
   };
 };
 
-export type APIResponce = RewardDTO[] | { detail: string };
+export type APIResponse = RewardDTO[] | { detail: string };

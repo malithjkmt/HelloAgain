@@ -1,6 +1,6 @@
-import { createSlice, createAsyncThunk, PayloadAction, createSelector } from '@reduxjs/toolkit';
+import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import { Reward } from '../../types/appTypes';
-import HelloAgainAPI from '../../services/HelloAgainAPI';
+import HelloAgainAPI from '../../services/helloAgainAPI';
 import { RootState } from '../store';
 
 interface RewardsState {
@@ -41,6 +41,13 @@ export const rewardsSlice = createSlice({
   extraReducers: builder => {
     builder.addCase(fetchRewards.fulfilled, (state, action) => {
       state.availableRewards = action.payload;
+
+      // Reset Collected Rewards
+      state.collectedRewards = [];
+      state.collectedRewardsMap = {};
+    });
+    builder.addCase(fetchRewards.rejected, state => {
+      state.availableRewards = [];
 
       // Reset Collected Rewards
       state.collectedRewards = [];

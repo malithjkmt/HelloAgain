@@ -4,15 +4,21 @@ import { theme } from '../styles/theme';
 
 interface ListEmptyCompProps {
   message: string;
+  isError?: boolean;
 }
 
-export const ListEmptyComp: FC<ListEmptyCompProps> = ({ message }) => {
-  return (
-    <View style={styles.container}>
-      <Text style={styles.text}>{message}</Text>
-    </View>
-  );
-};
+export const ListEmptyComp: FC<ListEmptyCompProps> = ({ message, isError }) => (
+  <View style={styles.container}>
+    <Text
+      style={[
+        styles.text,
+        { color: isError ? theme.colors.errorMessage : theme.colors.lightText },
+      ]}>
+      {message}
+    </Text>
+    <Text style={styles.tryAgainText}>Pull to Try Again</Text>
+  </View>
+);
 
 const styles = StyleSheet.create({
   container: {
@@ -21,6 +27,10 @@ const styles = StyleSheet.create({
   },
   text: {
     textAlign: 'center',
-    color: theme.colors.disabledText,
+  },
+  tryAgainText: {
+    marginTop: 10,
+    textAlign: 'center',
+    color: theme.colors.lightText,
   },
 });
