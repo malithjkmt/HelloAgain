@@ -1,13 +1,18 @@
 import React, { useEffect, useState } from 'react';
-import { View, StyleSheet, FlatList, RefreshControl } from 'react-native';
+import { View, StyleSheet, FlatList, RefreshControl, ActivityIndicator } from 'react-native';
 
 import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 import { fetchRewards } from '../../redux/rewards/rewards.slice';
 import { Reward } from '../../types/appTypes';
 import { CLIENT_ID } from '../../utils/constants';
 import { selectAvailableRewards, collectReward } from '../../redux/rewards/rewards.slice';
-import { ListEmptyComp, RewardCard, CARD_HEIGHT, CARD_MARGIN } from '../../components';
-import { CollectedRewardsView } from '../../views';
+import {
+  ListEmptyComp,
+  RewardCard,
+  CollectedRewardsSummary,
+  CARD_HEIGHT,
+  CARD_MARGIN,
+} from '../../components';
 import { theme } from '../../styles/theme';
 
 const HomeScreen = () => {
@@ -44,7 +49,7 @@ const HomeScreen = () => {
 
   const renderListEmptyComponent = () => {
     if (isFetching) {
-      return null;
+      return <ActivityIndicator size="large" color={theme.colors.loader} style={styles.loader} />;
     } else if (fetchingError) {
       return <ListEmptyComp message={fetchingError} isError={true} />;
     } else {
@@ -55,20 +60,16 @@ const HomeScreen = () => {
   return (
     <View style={styles.container}>
       <>
-        <CollectedRewardsView />
+        <CollectedRewardsSummary />
         <FlatList
           contentContainerStyle={styles.listContainer}
           ListEmptyComponent={renderListEmptyComponent}
           data={availableRewards}
           keyExtractor={item => item.id}
           renderItem={renderRewardCard}
-          progressViewOffset={200}
+          progressViewOffset={10}
+          onRefresh={onLoad}
           refreshing={isFetching}
-          getItemLayout={(data, index) => ({
-            length: CARD_HEIGHT,
-            offset: (CARD_HEIGHT + CARD_MARGIN * 2) * index,
-            index,
-          })}
           refreshControl={
             <RefreshControl
               refreshing={isFetching}
@@ -77,6 +78,11 @@ const HomeScreen = () => {
               colors={[theme.colors.loader]}
             />
           }
+          getItemLayout={(data, index) => ({
+            length: CARD_HEIGHT,
+            offset: (CARD_HEIGHT + CARD_MARGIN * 2) * index,
+            index,
+          })}
         />
       </>
     </View>
@@ -90,6 +96,9 @@ const styles = StyleSheet.create({
   },
   listContainer: {
     paddingTop: 4,
+  },
+  loader: {
+    marginTop: 20,
   },
 });
 

@@ -5,7 +5,7 @@ import { useAppSelector } from '../redux/hooks';
 import { selectCollectedRewards } from '../redux/rewards/rewards.slice';
 import { theme } from '../styles/theme';
 
-export const CollectedRewardsView = () => {
+export const CollectedRewardsSummary = () => {
   const collectedRewards = useAppSelector(selectCollectedRewards);
 
   return (

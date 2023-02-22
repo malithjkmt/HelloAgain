@@ -6,7 +6,6 @@ const fetchRewards = async (clientId: string) => {
   );
 
   const apiResponseJSON: APIResponse = await apiResponse.json();
-  console.log('apiResponseJSON: ', apiResponseJSON);
 
   if (Array.isArray(apiResponseJSON)) {
     return apiResponseJSON.map(i => rewardFromRewardDTO(i));

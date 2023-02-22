@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import { Reward } from '../../types/appTypes';
-import HelloAgainAPI from '../../services/helloAgainAPI';
+import HelloAgainAPI from '../../services/HelloAgainAPI';
 import { RootState } from '../store';
 
 interface RewardsState {

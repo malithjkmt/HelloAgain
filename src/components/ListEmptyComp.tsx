@@ -27,9 +27,11 @@ const styles = StyleSheet.create({
   },
   text: {
     textAlign: 'center',
+    fontSize: 17,
   },
   tryAgainText: {
     marginTop: 10,
+    fontSize: 17,
     textAlign: 'center',
     color: theme.colors.lightText,
   },
