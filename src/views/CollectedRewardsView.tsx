@@ -10,8 +10,11 @@ export const CollectedRewardsView = () => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.text} allowFontScaling={false}>
-        Collected Rewards: {collectedRewards.length}
+      <Text style={styles.labelText} allowFontScaling={false}>
+        Collected Rewards:
+      </Text>
+      <Text style={styles.valueText} allowFontScaling={false}>
+        {collectedRewards.length}
       </Text>
     </View>
   );
@@ -19,6 +22,8 @@ export const CollectedRewardsView = () => {
 
 const styles = StyleSheet.create({
   container: {
+    justifyContent: 'center',
+    flexDirection: 'row',
     paddingVertical: 20,
     paddingHorizontal: 10,
     backgroundColor: theme.colors.whiteBackground,
@@ -29,8 +34,16 @@ const styles = StyleSheet.create({
     shadowRadius: 0.5,
     elevation: 1,
   },
-  text: {
-    textAlign: 'center',
+  labelText: {
+    flex: 2.5,
+    textAlign: 'right',
+    color: theme.colors.defaultText,
+    fontSize: 18,
+  },
+  valueText: {
+    flex: 1,
+    textAlign: 'left',
+    marginLeft: 5,
     color: theme.colors.defaultText,
     fontSize: 18,
   },
