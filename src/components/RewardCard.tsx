@@ -5,11 +5,22 @@ import { theme } from '../styles/theme';
 import { Reward } from '../types/appTypes';
 import { Icons, PlaceHolders } from '../assets/images';
 
-interface RewardCardProps extends Reward { }
+interface RewardCardProps extends Reward {
+  isCollected: boolean;
+  onCollect: () => void;
+}
+
 export const CARD_HEIGHT = 90;
 export const CARD_MARGIN = 2;
 
-export const RewardCard: FC<RewardCardProps> = ({ id, name, image, neededPoints }) => {
+export const RewardCard: FC<RewardCardProps> = ({
+  id,
+  name,
+  image,
+  neededPoints,
+  isCollected,
+  onCollect,
+}) => {
   return (
     <View style={styles.card} key={id}>
       {image ? (
@@ -27,8 +38,10 @@ export const RewardCard: FC<RewardCardProps> = ({ id, name, image, neededPoints 
         <Text style={styles.nameText}>{name}</Text>
         <Text style={styles.pointsText}>{neededPoints} Points</Text>
       </View>
-      <TouchableOpacity style={styles.actionContainer}>
-        <Image style={styles.collectRewardIcon} source={Icons.collectRewardIcon} />
+      <TouchableOpacity style={styles.actionContainer} disabled={isCollected} onPress={onCollect}>
+        {!isCollected && (
+          <Image style={styles.collectRewardIcon} source={Icons.collectRewardIcon} />
+        )}
       </TouchableOpacity>
     </View>
   );
@@ -72,6 +85,8 @@ const styles = StyleSheet.create({
     color: theme.colors.lightText,
   },
   actionContainer: {
+    height: 70,
+    width: 70,
     padding: 10,
   },
   collectRewardIcon: {

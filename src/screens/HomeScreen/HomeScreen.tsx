@@ -4,18 +4,21 @@ import { View, Text, StyleSheet, FlatList, RefreshControl } from 'react-native';
 import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 import { fetchRewards } from '../../redux/rewards/rewards.slice';
 import { Reward } from '../../types/appTypes';
-
-import { selectAvailableRewards } from '../../redux/rewards/rewards.slice';
+import { CLIENT_ID } from '../../utils/constants';
+import {
+  selectAvailableRewards,
+  selectCollectedRewardsMap,
+  collectReward,
+} from '../../redux/rewards/rewards.slice';
 import { ListEmptyComp, RewardCard, CARD_HEIGHT, CARD_MARGIN } from '../../components';
 import { CollectedRewardsView } from '../../views';
 import { commonStyles } from '../../styles/commonStyles';
 import { theme } from '../../styles/theme';
 
-const CLIENT_ID = '5189';
-
 const HomeScreen = () => {
   const dispatch = useAppDispatch();
   const availableRewards = useAppSelector(selectAvailableRewards);
+  const collectedRewardsMap = useAppSelector(selectCollectedRewardsMap);
 
   const [isFetching, setIsFetching] = useState(false);
   const [fetchingError, setFetchingError] = useState<null | string>(null);
@@ -38,7 +41,17 @@ const HomeScreen = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const renderRewardCard = ({ item }: { item: Reward }) => <RewardCard {...item} />;
+  const onCollect = (i: Reward) => {
+    dispatch(collectReward(i));
+  };
+
+  const renderRewardCard = ({ item }: { item: Reward }) => (
+    <RewardCard
+      {...item}
+      isCollected={collectedRewardsMap[item.id] || false}
+      onCollect={() => onCollect(item)}
+    />
+  );
 
   return (
     <View style={styles.container}>
