@@ -1,29 +1,39 @@
-import React, { FC } from 'react';
+import React, { FC, memo } from 'react';
 import { View, StyleSheet, Text, TouchableOpacity, Image } from 'react-native';
+import FastImage from 'react-native-fast-image';
 
 import { theme } from '../styles/theme';
 import { Reward } from '../types/appTypes';
 import { Icons, PlaceHolders } from '../assets/images';
-import { useAppSelector } from '../redux/hooks';
-import { isRewardCollected } from '../redux/rewards/rewards.slice';
+import { useAppSelector, useAppDispatch } from '../redux/hooks';
+import { isRewardCollected, collectReward } from '../redux/rewards/rewards.slice';
 
-interface RewardCardProps extends Reward {
-  onCollect: () => void;
+interface RewardCardProps {
+  reward: Reward;
+  index: number;
 }
 
 export const CARD_HEIGHT = 90;
 export const CARD_MARGIN = 2;
 
-export const RewardCard: FC<RewardCardProps> = ({ id, name, image, neededPoints, onCollect }) => {
+const RewardCard: FC<RewardCardProps> = props => {
+  const { id, name, image, neededPoints } = props.reward;
+  const dispatch = useAppDispatch();
   const isCollected = useAppSelector(isRewardCollected(id));
 
+  const onCollect = () => {
+    dispatch(collectReward(props.reward));
+  };
+
+  console.log('Rendring Reward Card: ', props.index);
   return (
     <View style={styles.card} key={id}>
       {image ? (
-        <Image
+        <FastImage
           style={styles.logo}
           source={{
             uri: image,
+            priority: FastImage.priority.high,
           }}
         />
       ) : (
@@ -50,6 +60,8 @@ export const RewardCard: FC<RewardCardProps> = ({ id, name, image, neededPoints,
     </View>
   );
 };
+
+export default memo(RewardCard);
 
 const styles = StyleSheet.create({
   card: {
