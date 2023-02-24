@@ -11,6 +11,7 @@ interface RewardsState {
   };
   isFetching: boolean;
   fetchingError: string | undefined;
+  initialized: boolean;
 }
 
 const initialState: RewardsState = {
@@ -19,6 +20,7 @@ const initialState: RewardsState = {
   collectedRewardsMap: {},
   isFetching: true,
   fetchingError: undefined,
+  initialized: false,
 };
 
 export const fetchRewards = createAsyncThunk<Reward[], string, { rejectValue: string }>(
@@ -43,9 +45,13 @@ export const rewardsSlice = createSlice({
     },
   },
   extraReducers: builder => {
+    builder.addCase(fetchRewards.pending, state => {
+      state.isFetching = true;
+    });
     builder.addCase(fetchRewards.fulfilled, (state, action) => {
       state.availableRewards = action.payload;
       state.isFetching = false;
+      state.initialized = true;
 
       // Reset Collected Rewards
       state.collectedRewards = [];
@@ -53,6 +59,8 @@ export const rewardsSlice = createSlice({
     });
     builder.addCase(fetchRewards.rejected, (state, action) => {
       state.availableRewards = [];
+      state.isFetching = false;
+      state.initialized = true;
       state.fetchingError = action.payload;
 
       // Reset Collected Rewards
@@ -66,6 +74,7 @@ export const selectAvailableRewards = (state: RootState) => state.rewards.availa
 export const selectCollectedRewards = (state: RootState) => state.rewards.collectedRewards;
 export const selectIsFetching = (state: RootState) => state.rewards.isFetching;
 export const selectFetchingError = (state: RootState) => state.rewards.fetchingError;
+export const selectIsInitialized = (state: RootState) => state.rewards.initialized;
 
 export const isRewardCollected = (id: string) => (store: RootState) => {
   return store.rewards.collectedRewardsMap[id] || false;

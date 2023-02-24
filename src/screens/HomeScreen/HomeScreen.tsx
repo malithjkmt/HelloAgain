@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect } from 'react';
-import { View, StyleSheet, FlatList, RefreshControl, ActivityIndicator } from 'react-native';
+import { View, StyleSheet, FlatList, ActivityIndicator } from 'react-native';
 
 import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 import { fetchRewards } from '../../redux/rewards/rewards.slice';
@@ -9,6 +9,7 @@ import {
   selectAvailableRewards,
   selectIsFetching,
   selectFetchingError,
+  selectIsInitialized,
 } from '../../redux/rewards/rewards.slice';
 
 import RewardCard from '../../components/RewardCard';
@@ -32,6 +33,7 @@ const HomeScreen = () => {
   const availableRewards = useAppSelector(selectAvailableRewards);
   const isFetching = useAppSelector(selectIsFetching);
   const fetchingError = useAppSelector(selectFetchingError);
+  const initialized = useAppSelector(selectIsInitialized);
 
   const onLoad = useCallback(() => {
     dispatch(fetchRewards(CLIENT_ID));
@@ -42,21 +44,18 @@ const HomeScreen = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  console.log('Rendering Home Screen with state as: ', {
-    rewards: availableRewards.length,
-    isFetching,
-    fetchingError,
-  });
+  // eslint-disable-next-line prettier/prettier
+  console.log('Rendering Home Screen with states:', { rewards: availableRewards.length, isFetching, fetchingError, initialized });
 
-  const renderListEmptyComponent = useCallback(() => {
-    if (isFetching) {
-      return <ActivityIndicator size="large" color={theme.colors.loader} />;
+  const renderListEmptyComponent = () => {
+    if (isFetching && !initialized) {
+      return <ActivityIndicator size="large" color={theme.colors.loader} style={styles.loader} />;
     } else if (fetchingError) {
       return <ListEmptyComp message={fetchingError} isError={true} />;
     } else {
       return <ListEmptyComp message="No Loyalty rewards found" />;
     }
-  }, [isFetching, fetchingError]);
+  };
 
   return (
     <View style={styles.container}>
@@ -73,14 +72,6 @@ const HomeScreen = () => {
           progressViewOffset={10}
           onRefresh={onLoad}
           refreshing={isFetching}
-          refreshControl={
-            <RefreshControl
-              refreshing={isFetching}
-              onRefresh={onLoad}
-              tintColor={theme.colors.loader}
-              colors={[theme.colors.loader]}
-            />
-          }
           getItemLayout={getItemLayout}
         />
       </>
